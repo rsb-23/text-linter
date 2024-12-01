@@ -42,7 +42,7 @@ def main():
 
     # Set output for GitHub Actions
     with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-        f.write(f"comment={comment}\n")
+        f.write(f"comment={comment.encode()}\n")
     print(comment)
 
 
