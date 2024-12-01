@@ -33,10 +33,10 @@ def main():
         if suggestion == -1:
             continue
         suggestion = "\n  ".join(suggestion)
-        comment += f"\n- {file_path}:\n  {suggestion}"
+        comment += f"- {file_path}:\n  {suggestion}\n"
         flag = True
     if flag:
-        comment += "\n**Tip**: Create a commit in this PR itself."
+        comment += "**Tip**: Create a commit in this PR itself."
     else:
         comment = "### No typos found"
 
