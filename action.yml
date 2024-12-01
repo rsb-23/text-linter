@@ -47,11 +47,7 @@ runs:
         PR_BASE: ${{ github.event.pull_request.base.ref }}
         INPUT_FILES: ${{ inputs.files }}
         GROQ_API_KEY: ${{ inputs.GROQ_API_KEY }}
-      run: python src/spell_check.py
-
-    - name: Comment PR
-      uses: peter-evans/create-or-update-comment@v4
-      with:
         token: ${{ inputs.token }}
-        issue-number: ${{ github.event.pull_request.number }}
-        body: ${{ steps.spelling.outputs.comment }}
+        PR_NO: ${{ github.event.pull_request.number }}
+        repo: $GITHUB_REPOSITORY
+      run: python src/spell_check.py

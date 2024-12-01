@@ -34,7 +34,8 @@ def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> 
         return json.loads(json_str.replace("\n", ""))
     except json.JSONDecodeError as e:
         print(e.doc, e.pos)
-        raise
+        print(f"ERROR : {e.args}")
+        return {"suggestions": "..."}
 
 
 def find_typos(query_text):
