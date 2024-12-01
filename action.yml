@@ -55,4 +55,4 @@ runs:
       run: |
         pwd
         source .venv/bin/activate
-        python src/spell_check.py
+        python main.py
