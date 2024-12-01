@@ -1,15 +1,16 @@
 import json
-import os
 from functools import cache
 
 from groq import NOT_GIVEN, BadRequestError, Groq
+
+from src.config import GROQ_API_KEY
 
 model = ["llama-3.1-8b-instant", "llama3-70b-8192"][1]
 
 
 @cache
 def get_groq_client():
-    return Groq(api_key=os.environ.get("GROQ_API_KEY"))
+    return Groq(api_key=GROQ_API_KEY)
 
 
 def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> dict:

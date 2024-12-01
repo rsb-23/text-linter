@@ -1,12 +1,12 @@
-import os
 import subprocess
 
 import requests
 
+from config import INPUT_FILES, PAT_TOKEN, PR_BASE, PR_NO, REPO
 from groq_ai import find_typos
 
 
-def process_diff(file_path, base_branch):
+def process_diff(file_path, base_branch=PR_BASE):
     try:
         # Get diff from PR
         diff_command = f"git diff -U0 origin/{base_branch}... -- {file_path}"
@@ -21,12 +21,10 @@ def process_diff(file_path, base_branch):
 
 
 def post_comment(comment):
-    pr_no = os.environ["PR_NO"]
-    repo = os.environ["repo"]
-    url = f"https://api.github.com/repos/{repo}/issues/{pr_no}/comments"
+    url = f"https://api.github.com/repos/{REPO}/issues/{PR_NO}/comments"
     headers = {
         "Accept": "application/vnd.github+json",
-        "Authorization": f"Bearer {os.environ['token']}",
+        "Authorization": f"Bearer {PAT_TOKEN}",
         "X-GitHub-Api-Version": "2022-11-28",
     }
     resp = requests.post(url, headers=headers, json={"body": comment})
@@ -34,12 +32,8 @@ def post_comment(comment):
 
 
 def main():
-    # Get required inputs
-    pr_base = os.environ["PR_BASE"]
-    files = [*map(str.strip, os.environ["INPUT_FILES"].splitlines())]
-    print(pr_base, *files, sep="\n")
-
-    results = {file_path: process_diff(file_path, pr_base) for file_path in files if file_path}
+    # Process diff(s) for each file
+    results = {file_path: process_diff(file_path) for file_path in INPUT_FILES if file_path}
 
     # Create markdown comment for fixes
     flag = False

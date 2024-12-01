@@ -49,5 +49,4 @@ runs:
         GROQ_API_KEY: ${{ inputs.GROQ_API_KEY }}
         token: ${{ inputs.token }}
         PR_NO: ${{ github.event.pull_request.number }}
-        repo: $GITHUB_REPOSITORY
       run: python src/spell_check.py
