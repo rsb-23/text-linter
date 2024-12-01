@@ -13,6 +13,10 @@ inputs:
   GROQ_API_KEY:
     description: 'Groq API Key'
     required: true
+  token:
+    description: 'PAT with pull_request:write permission'
+    required: true
+    default: ${{ github.token }}
 
 outputs:
   comment:
@@ -48,5 +52,6 @@ runs:
     - name: Comment PR
       uses: peter-evans/create-or-update-comment@v4
       with:
+        token: ${{ inputs.token }}
         issue-number: ${{ github.event.pull_request.number }}
         body: ${{ steps.spelling.outputs.comment }}

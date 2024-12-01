@@ -15,6 +15,7 @@ jobs:
         id: spelling
         uses: ./
         with:
+          token: ${{ secrets.PAT }}
           files: |
             tests/file.txt
             tests/file.json
