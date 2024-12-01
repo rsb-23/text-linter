@@ -12,7 +12,6 @@ jobs:
           fetch-depth: 0
 
       - name: Run script
-        id: spelling
         uses: ./
         with:
           token: ${{ secrets.PAT }}
