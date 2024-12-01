@@ -1,11 +1,15 @@
-name: 'Check-Diff-Typo'
-description: 'Analyzes and comments on PR diff typos for specified files'
+name: 'Check-Typo'
+description: 'Checks diff of specified files for typos and suggests fixes on PR.'
 author: 'Rishabh B'
 branding:
   icon: 'git-pull-request'
   color: 'green'
 
 inputs:
+  token:
+    description: 'PAT with `pull_request:write` permission'
+    required: true
+    default: ${{ github.token }}
   files:
     description: 'Comma-separated list of files to analyze'
     required: true
@@ -14,10 +18,6 @@ inputs:
     description: 'Groq API Key'
     required: true
 
-outputs:
-  comment:
-    description: 'Generated comment markdown'
-    value: ${{ steps.spelling.outputs.comment }}
 
 runs:
   using: "composite"
@@ -28,6 +28,8 @@ runs:
         cache: 'pip'
     - name: Setup python env
       run: |
+        python -m venv .venv
+        source .venv/bin/activate
         python -m pip install --upgrade pip
         pip install -r requirements.txt
       shell: bash
@@ -40,13 +42,11 @@ runs:
       id: spelling
       shell: bash
       env:
-        PR_BASE: ${{ github.event.pull_request.base.ref }}
+        PR_BASE: ${{ github.base_ref }}
         INPUT_FILES: ${{ inputs.files }}
         GROQ_API_KEY: ${{ inputs.GROQ_API_KEY }}
-      run: python src/spell_check.py
-
-    - name: Comment PR
-      uses: peter-evans/create-or-update-comment@v4
-      with:
-        issue-number: ${{ github.event.pull_request.number }}
-        body: ${{ steps.spelling.outputs.comment }}
+        token: ${{ inputs.token }}
+        PR_NO: ${{ github.event.pull_request.number }}
+      run: |
+        source .venv/bin/activate
+        python main.py
