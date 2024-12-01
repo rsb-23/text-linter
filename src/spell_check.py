@@ -2,13 +2,13 @@ import json
 import os
 import subprocess
 
-from .groq_ai import find_typos
+from groq_ai import find_typos
 
 
-def process_diff(file_path):
+def process_diff(file_path, base_branch):
     try:
         # Get diff from PR
-        diff_command = f"git diff -U0 -- {file_path}"
+        diff_command = f"git diff -U0 origin/{base_branch}... -- {file_path}"
         diff_output = subprocess.check_output(diff_command.split()).decode("utf-8")
     except subprocess.CalledProcessError:
         print("Error in process diff")
@@ -21,10 +21,11 @@ def process_diff(file_path):
 
 def main():
     # Get required inputs
+    pr_base = os.environ["PR_BASE"]
     files = [*map(str.strip, os.environ["INPUT_FILES"].splitlines())]
-    print(*files)
+    print(pr_base, *files, sep="\n")
 
-    results = {file_path: process_diff(file_path) for file_path in files if file_path}
+    results = {file_path: process_diff(file_path, pr_base) for file_path in files if file_path}
 
     # Create markdown comment for fixes
     flag = False
@@ -38,7 +39,7 @@ def main():
     if flag:
         comment += "\n**Tip**: Create a commit in this PR itself."
     else:
-        comment = ""
+        comment = "### No typos found"
 
     # Set output for GitHub Actions
     with open(os.environ["GITHUB_OUTPUT"], "a") as f:
