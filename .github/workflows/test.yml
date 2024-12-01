@@ -1,0 +1,24 @@
+name: Test Typo Checker
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  analyze-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch main branch
+        run: git fetch origin main:main
+
+      - name: Run script
+        id: spelling
+        uses: ./
+        with:
+          files: |
+            tests/file.txt
+            tests/file.json
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}

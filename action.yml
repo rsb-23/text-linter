@@ -1,0 +1,51 @@
+name: 'Check-Diff-Typo'
+description: 'Analyzes and comments on PR diff typos for specified files'
+author: 'Rishabh B'
+branding:
+  icon: 'git-pull-request'
+  color: 'green'
+
+inputs:
+  files:
+    description: 'Comma-separated list of files to analyze'
+    required: true
+    type: list
+  GROQ_API_KEY:
+    description: 'Groq API Key'
+    required: true
+    default: ${{ secrets.GROQ_API_KEY }}
+  base-branch:
+    description: 'Base branch of PR'
+    required: true
+    default: ${{ github.event. }}
+
+outputs:
+  comment:
+    description: 'Generated comment markdown'
+    value: ${{ steps.spelling.outputs.comment }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        cache: 'pip'
+
+    - name: Fetch PR base branch
+      shell: bash
+      run: git fetch origin ${{ github.event.pull_request.base.ref }}
+
+    - name: Run typo checker
+      id: spelling
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        python spell_check.py
+
+    - name: Comment PR
+      if: ${{ steps.diff.outputs.comment != '' }}
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: ${{ github.event.pull_request.number }}
+        body: ${{ steps.diff.outputs.comment }}
