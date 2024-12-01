@@ -26,17 +26,19 @@ def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> 
             response_format=response_format,
         )
         json_str = chat_completion.choices[0].message.content
+        json_str = json_str.strip()
     except BadRequestError as e:
         failed_json = e.body["error"]["failed_generation"]  # noqa
         json_str = failed_json.replace('"""', '"').replace("\n", "\\n")
     if not json_schema:
         return json_str
     try:
-        return json.loads(json_str.replace("\n", ""))
+        # json_str = re.sub("\n +", "", json_str)
+        return json.loads(json_str)
     except json.JSONDecodeError as e:
         print(e.doc, e.pos)
         print(f"ERROR : {e.args}")
-        return {"suggestions": "..."}
+        return {"suggestions": ["..."]}
 
 
 def find_typos(query_text):

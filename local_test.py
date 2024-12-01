@@ -1,12 +1,8 @@
-from src.spell_check import main
+from dotenv import load_dotenv
 
-
-def run():
-    from dotenv import load_dotenv
-
-    load_dotenv()
-    main()
-
+load_dotenv()
 
 if __name__ == "__main__":
-    run()
+    from src.spell_check import main
+
+    main()

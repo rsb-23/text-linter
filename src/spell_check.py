@@ -2,8 +2,8 @@ import subprocess
 
 import requests
 
-from config import INPUT_FILES, PAT_TOKEN, PR_BASE, PR_NO, REPO
-from groq_ai import find_typos
+from src.config import INPUT_FILES, PAT_TOKEN, PR_BASE, PR_NO, REPO
+from src.groq_ai import find_typos
 
 
 def process_diff(file_path, base_branch=PR_BASE):
