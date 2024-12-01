@@ -1,4 +1,3 @@
-import json
 import os
 import subprocess
 
@@ -29,12 +28,12 @@ def main():
 
     # Create markdown comment for fixes
     flag = False
-    comment = "## Suggested Typo Fixes\n\n"
+    comment = "### Suggested Typo Fixes\n"
     for file_path, suggestion in results.items():
         if suggestion == -1:
             continue
         suggestion = "\n  ".join(suggestion)
-        comment += f"- {file_path}:\n  {suggestion}\n"
+        comment += f"\n- {file_path}:\n  {suggestion}"
         flag = True
     if flag:
         comment += "\n**Tip**: Create a commit in this PR itself."
@@ -43,7 +42,7 @@ def main():
 
     # Set output for GitHub Actions
     with open(os.environ["GITHUB_OUTPUT"], "a") as f:
-        f.write(f"comment={json.dumps(comment)}\n")
+        f.write(f"comment={comment}\n")
     print(comment)
 
 
