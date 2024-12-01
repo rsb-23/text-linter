@@ -32,6 +32,7 @@ runs:
         cache: 'pip'
     - name: Setup python env
       run: |
+        pwd
         python -m venv .venv
         source .venv/bin/activate
         python -m pip install --upgrade pip
@@ -51,4 +52,7 @@ runs:
         GROQ_API_KEY: ${{ inputs.GROQ_API_KEY }}
         token: ${{ inputs.token }}
         PR_NO: ${{ github.event.pull_request.number }}
-      run: python src/spell_check.py
+      run: |
+        pwd
+        source .venv/bin/activate
+        python src/spell_check.py
