@@ -28,7 +28,13 @@ def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> 
     except BadRequestError as e:
         failed_json = e.body["error"]["failed_generation"]  # noqa
         json_str = failed_json.replace('"""', '"').replace("\n", "\\n")
-    return json.loads(json_str) if json_schema else json_str
+    if not json_schema:
+        return json_str
+    try:
+        return json.loads(json_str.replace("\n", ""))
+    except json.JSONDecodeError as e:
+        print(e.doc, e.pos)
+        raise
 
 
 def find_typos(query_text):
@@ -37,8 +43,7 @@ def find_typos(query_text):
         " and list mistakes (if any) along with suggestion, not fixes."
         "Keep it short, no explanation. Do not modify urls, usernames and hashtags."
     )
-    ans = ask_groq(query_text, system_content, json_schema={"suggestions": []})
-    print(ans)
+    ans = ask_groq(query_text, system_content, json_schema={"suggestions": ["str"]})
     return ans["suggestions"]
 
 
