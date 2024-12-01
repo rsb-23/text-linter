@@ -36,7 +36,7 @@ def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> 
         # json_str = re.sub("\n +", "", json_str)
         return json.loads(json_str)
     except json.JSONDecodeError as e:
-        print(e.doc, e.pos)
+        print(e.doc.encode(), e.pos)
         print(f"ERROR : {e.args}")
         return {"suggestions": ["..."]}
 
