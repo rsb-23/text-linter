@@ -1,12 +1,12 @@
-# actions/check-typo
+# Text Linter CI
 
-This Github Action uses AI to find typos and grammatical errors in PR changes.
+This Github Action uses AI to find typos and grammatical errors in specified data files.
 
 ## Usage
 Refer [test.yml](./.github/workflows/test.yml)
 ```yaml
-  - name: Check typos in data files
-    uses: actions/check-diff-typo@v1
+  - name: Lint Text in Data Files
+    uses: actions/text-linter@v1
     with:
       token: ${{ secrets.PAT }}
       files: |
