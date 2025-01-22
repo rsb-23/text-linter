@@ -27,7 +27,7 @@ def post_comment(comment):
         "Authorization": f"Bearer {PAT_TOKEN}",
         "X-GitHub-Api-Version": "2022-11-28",
     }
-    resp = requests.post(url, headers=headers, json={"body": comment})
+    resp = requests.post(url, headers=headers, json={"body": comment}, timeout=300)
     resp.raise_for_status()
 
 

@@ -5,7 +5,7 @@ from groq import NOT_GIVEN, BadRequestError, Groq
 
 from src.config import GROQ_API_KEY
 
-model = ["llama-3.1-8b-instant", "llama3-70b-8192"][1]
+LLM_MODEL = ["llama-3.1-8b-instant", "llama3-70b-8192"][1]
 
 
 @cache
@@ -22,7 +22,7 @@ def ask_groq(query_text: str, system_content: str, json_schema: dict = None) -> 
     try:
         chat_completion = client.chat.completions.create(
             messages=[{"role": "system", "content": system_content}, {"role": "user", "content": query_text}],
-            model=model,
+            model=LLM_MODEL,
             response_format=response_format,
         )
         json_str = chat_completion.choices[0].message.content
@@ -64,5 +64,5 @@ if __name__ == "__main__":
     from dotenv import load_dotenv  # noqa
 
     load_dotenv()
-    answer = ask_groq("Debuging is hard.")  # noqa
+    answer = ask_groq("Debuging is hard.", system_content="")
     print(answer)

@@ -1,4 +1,4 @@
-from src.spell_check import main
+from src.text_linter import main
 
 if __name__ == "__main__":
     main()
