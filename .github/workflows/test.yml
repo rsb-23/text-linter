@@ -18,4 +18,5 @@ jobs:
           files: |
             tests/file.txt
             tests/file.json
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          provider: groq
+          api_key: ${{ secrets.GROQ_API_KEY }}

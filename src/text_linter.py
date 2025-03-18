@@ -3,7 +3,7 @@ import subprocess
 import requests
 
 from src.config import INPUT_FILES, PAT_TOKEN, PR_BASE, PR_NO, REPO
-from src.groq_ai import find_typos
+from src.llm_service import find_typos
 
 
 def process_diff(file_path, base_branch=PR_BASE):
