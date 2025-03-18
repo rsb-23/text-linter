@@ -1,2 +1,2 @@
 reciever
-bluetooth
+bluetooh
