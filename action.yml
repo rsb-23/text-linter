@@ -14,9 +14,16 @@ inputs:
     description: 'Comma-separated list of files to analyze'
     required: true
     type: list
-  GROQ_API_KEY:
-    description: 'Groq API Key'
+  provider:
+    description: 'Provider of the language model (e.g., openai, anthropic, groq)'
     required: true
+    default: groq
+  api_key:
+    description: 'API Key for the specified provider'
+    required: true
+  model:
+    description: 'Language model by the specified provider'
+    required: false
 
 
 runs:
@@ -44,7 +51,9 @@ runs:
       env:
         PR_BASE: ${{ github.base_ref }}
         INPUT_FILES: ${{ inputs.files }}
-        GROQ_API_KEY: ${{ inputs.GROQ_API_KEY }}
+        PROVIDER: ${{ inputs.provider }}
+        API_KEY: ${{ inputs.api_key }}
+        LLM_MODEL: ${{ inputs.model }}
         token: ${{ inputs.token }}
         PR_NO: ${{ github.event.pull_request.number }}
       run: |
