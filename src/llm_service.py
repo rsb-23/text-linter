@@ -1,8 +1,13 @@
 import json
 
-from litellm import completion
+from litellm import BadRequestError, completion, validate_environment
 
-from src.config import LLM_MODEL, PROVIDER
+from src.config import LLM_API_KEY, LLM_MODEL, PROVIDER
+
+
+def validate_model(provider: str = PROVIDER, model: str = LLM_MODEL) -> None:
+    model_str = f"{provider}/{model}"
+    assert not validate_environment(model_str)["keys_in_environment"], f"Invalid value : {model}"
 
 
 def ask_llm(query_text: str, system_content: str, json_schema: dict = None, provider=PROVIDER) -> dict:
@@ -12,15 +17,20 @@ def ask_llm(query_text: str, system_content: str, json_schema: dict = None, prov
         response_format = {"type": "json_object"}
     try:
         # Send a message to the model
+        print("calling llm...")
         response = completion(
             model=f"{provider}/{LLM_MODEL}",
+            api_key=LLM_API_KEY,
             messages=[{"role": "system", "content": system_content}, {"role": "user", "content": query_text}],
             response_format=response_format,
         )
-        return response["choices"][0]["message"]["content"]
-    except Exception as e:
-        failed_json = e.body["error"]["failed_generation"]  # noqa
-        json_str = failed_json.replace('"""', '"').replace("\n", "\\n")
+        json_str = response["choices"][0]["message"]["content"]
+    except BadRequestError as e:
+        json_str = e.message  # reusing variable for showing error
+
+    if json_str.startswith("litellm"):
+        raise RuntimeError(json_str)
+
     if not json_schema:
         return json_str
     try:

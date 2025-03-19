@@ -17,6 +17,7 @@ inputs:
   provider:
     description: 'Provider of the language model (e.g., openai, anthropic, groq)'
     required: true
+    default: groq
   api_key:
     description: 'API Key for the specified provider'
     required: true
