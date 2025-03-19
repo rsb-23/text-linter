@@ -14,5 +14,12 @@ profile = "black"
 line_length = 120
 multi_line_output = 3
 
+[tool.pylint.master]
+jobs = 2
+ignore-paths = "(?!(src|tests))/*"
+
 [tool.pylint.format]
 max-line-length = 130
+
+[tool.pylint.messages_control]
+disable = ["I", "import-error", "missing-docstring", "duplicate-code"]
